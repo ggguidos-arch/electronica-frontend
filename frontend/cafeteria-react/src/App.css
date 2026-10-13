@@ -1,22 +1,41 @@
+/* ==========================================
+   BOTÓN / COUNTER
+   ========================================== */
 .counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
+  font-size: 1rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
   color: var(--accent);
-  background: var(--accent-bg);
+  background-color: var(--accent-bg);
   border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+  cursor: pointer;
+  user-select: none;
+  margin-block-end: 1.5rem;
+  
+  /* Transición fluida de propiedades específicas */
+  transition: 
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.1s ease;
 
   &:hover {
     border-color: var(--accent-border);
   }
+
+  /* Feedback táctil/click */
+  &:active {
+    transform: scale(0.98);
+  }
+
   &:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
 }
 
+/* ==========================================
+   HERO & 3D LOGOS
+   ========================================== */
 .hero {
   position: relative;
 
@@ -24,26 +43,30 @@
   .framework,
   .vite {
     inset-inline: 0;
-    margin: 0 auto;
+    margin-inline: auto;
+    /* Suaviza bordes en transformaciones 3D */
+    backface-visibility: hidden;
+    will-change: transform;
   }
 
   .base {
     width: 170px;
     position: relative;
     z-index: 0;
+    display: block;
   }
 
   .framework,
   .vite {
     position: absolute;
+    transform-origin: center center;
   }
 
   .framework {
     z-index: 1;
     top: 34px;
     height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
+    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg) scale(1.4);
   }
 
   .vite {
@@ -51,25 +74,30 @@
     top: 107px;
     height: 26px;
     width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
+    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg) scale(0.8);
   }
 }
 
+/* ==========================================
+   LAYOUT CENTRAL
+   ========================================== */
 #center {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
   flex-grow: 1;
 
   @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
+    padding: 2rem 1.25rem 1.5rem;
+    gap: 1.125rem;
   }
 }
 
+/* ==========================================
+   SECCIÓN NEXT STEPS & DOCS
+   ========================================== */
 #next-steps {
   display: flex;
   border-top: 1px solid var(--border);
@@ -77,16 +105,18 @@
 
   & > div {
     flex: 1 1 0;
-    padding: 32px;
+    padding: 2rem;
+
     @media (max-width: 1024px) {
-      padding: 24px 20px;
+      padding: 1.5rem 1.25rem;
     }
   }
 
   .icon {
-    margin-bottom: 16px;
+    margin-block-end: 1rem;
     width: 22px;
     height: 22px;
+    display: block;
   }
 
   @media (max-width: 1024px) {
@@ -104,45 +134,63 @@
   }
 }
 
+/* Lista de enlaces / redes */
 #next-steps ul {
   list-style: none;
   padding: 0;
   display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
+  gap: 0.5rem;
+  margin: 2rem 0 0;
 
   .logo {
     height: 18px;
+    width: auto;
   }
 
   a {
     color: var(--text-h);
-    font-size: 16px;
+    font-size: 1rem;
     border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
+    background-color: var(--social-bg);
+    display: inline-flex;
+    padding: 0.4rem 0.75rem;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     text-decoration: none;
-    transition: box-shadow 0.3s;
+    transition: 
+      box-shadow 0.2s ease,
+      transform 0.15s ease,
+      background-color 0.2s ease;
 
     &:hover {
       box-shadow: var(--shadow);
+      transform: translateY(-1px);
     }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    /* Accesibilidad con teclado para enlaces */
+    &:focus-visible {
+      outline: 2px solid var(--accent, currentColor);
+      outline-offset: 2px;
+    }
+
     .button-icon {
       height: 18px;
       width: 18px;
+      flex-shrink: 0;
     }
   }
 
   @media (max-width: 1024px) {
-    margin-top: 20px;
+    margin-top: 1.25rem;
     flex-wrap: wrap;
     justify-content: center;
 
     li {
-      flex: 1 1 calc(50% - 8px);
+      flex: 1 1 calc(50% - 0.5rem);
     }
 
     a {
@@ -153,9 +201,13 @@
   }
 }
 
+/* ==========================================
+   ESPACIADOR Y DETALLES GRÁFICOS (TICKS)
+   ========================================== */
 #spacer {
   height: 88px;
   border-top: 1px solid var(--border);
+
   @media (max-width: 1024px) {
     height: 48px;
   }
@@ -171,14 +223,28 @@
     position: absolute;
     top: -4.5px;
     border: 5px solid transparent;
+    pointer-events: none;
   }
 
   &::before {
     left: 0;
     border-left-color: var(--border);
   }
+
   &::after {
     right: 0;
     border-right-color: var(--border);
+  }
+}
+
+/* ==========================================
+   ACCESIBILIDAD: PREFERENCIA DE MOVIMIENTO
+   ========================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
   }
 }
