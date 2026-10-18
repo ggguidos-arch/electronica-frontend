@@ -107,7 +107,7 @@ function Inventario() {
           <tbody>
             {productos.map(p => (
               <tr key={p.id}>
-                <td><code>REF-{p.id.toString().padStart(4, '0')}</code></td>
+                <td style={{ color: '#64748b' }}>#{p.id}</td>
                 <td><strong>{p.nombre}</strong></td>
                 <td><span className="category-badge">{p.categoria}</span></td>
                 <td>${Number(p.precio).toFixed(2)}</td>
