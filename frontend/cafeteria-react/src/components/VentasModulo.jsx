@@ -106,7 +106,7 @@ function VentasModulo() {
         <table className="data-table">
           <thead>
             <tr>
-              <th>Folio</th>
+              <th style={{ width: '50px' }}>#</th>
               <th>Titular</th>
               <th>Artículo</th>
               <th>Unidades</th>
@@ -119,7 +119,7 @@ function VentasModulo() {
           <tbody>
             {ventas.map(v => (
               <tr key={v.id}>
-                <td><code>ORD-{v.id.toString().padStart(5, '0')}</code></td>
+                <td style={{ color: '#64748b', fontWeight: 600 }}>#{v.id}</td>
                 <td><strong>{v.cliente}</strong></td>
                 <td>{v.producto}</td>
                 <td>{v.cantidad}</td>
