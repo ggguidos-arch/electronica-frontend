@@ -95,7 +95,7 @@ function Inventario() {
         <table className="data-table">
           <thead>
             <tr>
-              <th>Código</th>
+              <th style={{ width: '50px' }}>#</th>
               <th>Descripción</th>
               <th>Segmento</th>
               <th>Precio</th>
@@ -107,7 +107,7 @@ function Inventario() {
           <tbody>
             {productos.map(p => (
               <tr key={p.id}>
-                <td style={{ color: '#64748b' }}>#{p.id}</td>
+                <td style={{ color: '#64748b', fontWeight: 600 }}>#{p.id}</td>
                 <td><strong>{p.nombre}</strong></td>
                 <td><span className="category-badge">{p.categoria}</span></td>
                 <td>${Number(p.precio).toFixed(2)}</td>
