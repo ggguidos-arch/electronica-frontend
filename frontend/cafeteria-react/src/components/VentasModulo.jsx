@@ -117,9 +117,9 @@ function VentasModulo() {
             </tr>
           </thead>
           <tbody>
-            {ventas.map(v => (
-              <tr key={v.id}>
-                <td style={{ color: '#64748b', fontWeight: 600 }}>#{v.id}</td>
+           {ventas.map((v, index) => (
+  <tr key={v.id}>
+    <td style={{ color: '#64748b', fontWeight: 600 }}>#{index + 1}</td>
                 <td><strong>{v.cliente}</strong></td>
                 <td>{v.producto}</td>
                 <td>{v.cantidad}</td>
