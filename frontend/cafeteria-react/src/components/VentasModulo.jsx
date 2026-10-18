@@ -6,112 +6,128 @@ function VentasModulo() {
   const [productos, setProductos] = useState([]);
   const [formData, setFormData] = useState({ cliente_nombre: '', producto_id: '', cantidad: 1, fecha: '' });
 
-  const cargarDatos = () => {
+  const cargar = () => {
     api.get('/ventas').then(res => setVentas(res.data)).catch(console.error);
     api.get('/productos').then(res => setProductos(res.data)).catch(console.error);
   };
 
   useEffect(() => {
-    cargarDatos();
-    const hoy = new Date().toISOString().split('T')[0];
-    setFormData(prev => ({ ...prev, fecha: hoy }));
+    cargar();
+    setFormData(prev => ({ ...prev, fecha: new Date().toISOString().split('T')[0] }));
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     api.post('/ventas', formData)
-      .then(res => {
-        alert(res.data.message);
+      .then(() => {
         setFormData({ cliente_nombre: '', producto_id: '', cantidad: 1, fecha: new Date().toISOString().split('T')[0] });
-        cargarDatos();
+        cargar();
       })
       .catch(err => {
-        const errorMsg = err.response?.data?.error || 'Hubo un error al registrar la venta';
-        alert(errorMsg);
+        alert(err.response?.data?.error || 'No fue posible registrar la venta.');
       });
   };
 
   const handleEliminar = (id) => {
-    if (window.confirm('¿Deseas cancelar esta venta? El stock se devolverá al inventario.')) {
-      api.delete(`/ventas/${id}`).then(() => cargarDatos()).catch(console.error);
+    if (window.confirm('¿Anular esta transacción? El inventario se repondrá automáticamente.')) {
+      api.delete(`/ventas/${id}`).then(cargar).catch(console.error);
     }
   };
 
   return (
-    <div className="module-container">
-      <div className="header-action">
+    <div>
+      <div className="section-header">
         <div>
-          <h2>Punto de Venta y Transacciones</h2>
-          <p className="subtitle">Registra salidas de productos con ajuste automático de existencias.</p>
+          <h2 className="section-title">Terminal de Transacciones Comerciales</h2>
+          <p className="section-description">Emisión de salidas de producto con decremento inmediato en la base de datos de stock.</p>
         </div>
       </div>
 
-      <div className="card-form">
-        <h3>Registrar Transacción</h3>
-        <form onSubmit={handleSubmit} className="form-grid">
-          <input
-            type="text"
-            placeholder="Nombre del Cliente (crea o asocia)"
-            value={formData.cliente_nombre}
-            onChange={(e) => setFormData({ ...formData, cliente_nombre: e.target.value })}
-            required
-          />
-          <select
-            value={formData.producto_id}
-            onChange={(e) => setFormData({ ...formData, producto_id: e.target.value })}
-            required
-          >
-            <option value="">Seleccionar Aparato Electrónico</option>
-            {productos.map(p => (
-              <option key={p.id} value={p.id} disabled={p.stock <= 0}>
-                {p.nombre} — ${p.precio} (Stock: {p.stock}) {p.stock <= 0 ? '❌ AGOTADO' : ''}
-              </option>
-            ))}
-          </select>
-          <input
-            type="number"
-            min="1"
-            placeholder="Cantidad"
-            value={formData.cantidad}
-            onChange={(e) => setFormData({ ...formData, cantidad: e.target.value })}
-            required
-          />
-          <input
-            type="date"
-            value={formData.fecha}
-            onChange={(e) => setFormData({ ...formData, fecha: e.target.value })}
-            required
-          />
-          <button type="submit" className="btn btn-success">Completar Venta</button>
+      <div className="panel">
+        <h3 className="panel-title">Registrar Nueva Salida</h3>
+        <form onSubmit={handleSubmit} className="form-row">
+          <div className="form-group">
+            <label className="form-label">Cliente (Búsqueda o Alta)</label>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Nombre del cliente"
+              value={formData.cliente_nombre}
+              onChange={(e) => setFormData({ ...formData, cliente_nombre: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Dispositivo</label>
+            <select
+              className="form-select"
+              value={formData.producto_id}
+              onChange={(e) => setFormData({ ...formData, producto_id: e.target.value })}
+              required
+            >
+              <option value="">Seleccione un producto</option>
+              {productos.map(p => (
+                <option key={p.id} value={p.id} disabled={p.stock <= 0}>
+                  {p.nombre} — ${p.precio} [{p.stock <= 0 ? 'Sin existencias' : `${p.stock} disponibles`}]
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Cantidad</label>
+            <input
+              type="number"
+              min="1"
+              className="form-input"
+              value={formData.cantidad}
+              onChange={(e) => setFormData({ ...formData, cantidad: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Fecha Contable</label>
+            <input
+              type="date"
+              className="form-input"
+              value={formData.fecha}
+              onChange={(e) => setFormData({ ...formData, fecha: e.target.value })}
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn-action">Procesar Venta</button>
         </form>
       </div>
 
-      <div className="table-wrapper">
-        <table className="custom-table">
+      <div className="data-table-container">
+        <table className="data-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Cliente</th>
-              <th>Aparato</th>
-              <th>Cant.</th>
+              <th>Folio</th>
+              <th>Titular</th>
+              <th>Artículo</th>
+              <th>Unidades</th>
               <th>Precio Unit.</th>
-              <th>Total</th>
+              <th>Total Liquidado</th>
               <th>Fecha</th>
-              <th>Acciones</th>
+              <th>Operación</th>
             </tr>
           </thead>
           <tbody>
             {ventas.map(v => (
               <tr key={v.id}>
-                <td>#{v.id}</td>
+                <td><code>ORD-{v.id.toString().padStart(5, '0')}</code></td>
                 <td><strong>{v.cliente}</strong></td>
                 <td>{v.producto}</td>
                 <td>{v.cantidad}</td>
                 <td>${Number(v.precio).toFixed(2)}</td>
-                <td><strong style={{ color: '#10b981' }}>${Number(v.total).toFixed(2)}</strong></td>
+                <td><strong style={{ color: '#34d399' }}>${Number(v.total).toFixed(2)}</strong></td>
                 <td>{v.fecha ? v.fecha.split('T')[0] : ''}</td>
                 <td>
-                  <button className="btn btn-danger btn-sm" onClick={() => handleEliminar(v.id)}>
+                  <button className="btn-danger-outline" onClick={() => handleEliminar(v.id)}>
                     Anular
                   </button>
                 </td>
