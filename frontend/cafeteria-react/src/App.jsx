@@ -12,14 +12,14 @@ function App() {
   return (
     <div className="app-layout">
       <Navbar pestanaActiva={pestanaActiva} setPestanaActiva={setPestanaActiva} />
-      <main className="main-content">
+      <main className="main-wrapper">
         {pestanaActiva === 'dashboard' && <Dashboard setPestanaActiva={setPestanaActiva} />}
         {pestanaActiva === 'ventas' && <VentasModulo />}
         {pestanaActiva === 'inventario' && <Inventario />}
         {pestanaActiva === 'clientes' && <Clientes />}
       </main>
-      <footer className="footer">
-        <p>TechStore ERP &copy; {new Date().getFullYear()} — Plataforma de Gestión de Electrónica</p>
+      <footer className="app-footer">
+        TechStore Console &copy; {new Date().getFullYear()} &mdash; Enterprise Management Platform
       </footer>
     </div>
   );
